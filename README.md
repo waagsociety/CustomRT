@@ -16,6 +16,8 @@ A new workflow is defined by:
   2. Create Queue dependent custom template (see file `CreateNoMapTicketTemplate.pm`)
   3. Create Queue dependent scrip. See for the fields the file `CreateNoMapTicketScrip.pm`
 
+At the moment there are two tickets that changes status based on the different phases of the workflow shown in `Projectkaartwijziging.pdf`. Each phase has a different owner that can operate upon it, and at the moment the person that causes the transition has also the task of assigning the new owner (maybe this can be done automatically).
+
 Once a ticket on the main branch of the flow reaches the `memoCompleted` state, a new ticket is automatically created that is depended on by the main ticket. This forces the fact that unless the depended on ticket is resolved (`mapReady` status), the main ticket CAN NOT transition to the final `cardHandled` status.
 
 ## Examples for custom implementations
