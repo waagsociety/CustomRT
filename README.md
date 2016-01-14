@@ -1,7 +1,7 @@
 # CustomRT
 Customisation for Request Tracker ticketing system
 
-# Implementing a workflow in RT
+## Implementing a workflow in RT
 
 A new workflow is defined by:
 
