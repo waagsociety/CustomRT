@@ -15,3 +15,18 @@ A new workflow is defined by:
   1. Load custom condition (/opt/rt4/sbin/rt-setup-database --action insert --datafile ./OnMemoCompleted.pm)
   2. Create Queue dependent custom template (see file `CreateNoMapTicketTemplate.pm`)
   3. Create Queue dependent scrip. See for the fields the file `CreateNoMapTicketScrip.pm`
+
+Once a ticket on the main branch of the flow reaches the `memoCompleted` state, a new ticket is automatically created that is depended on by the main ticket. This forces the fact that unless the depended on ticket is resolved (`mapReady` status), the main ticket CAN NOT transition to the final `cardHandled` status.
+
+## Examples for custom implementations
+Parallel workflow implemented with custom fields and child tickets:
+http://requesttracker.wikia.com/wiki/WorkFlow
+
+Start subtasks from bullet list:
+http://requesttracker.wikia.com/wiki/DivideTicketIntoSubtasks\
+
+User contributions:
+http://requesttracker.wikia.com/wiki/Contributions
+
+Checks on different conditions:
+http://requesttracker.wikia.com/wiki/CustomConditionSnippets
