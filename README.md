@@ -32,3 +32,26 @@ http://requesttracker.wikia.com/wiki/Contributions
 
 Checks on different conditions:
 http://requesttracker.wikia.com/wiki/CustomConditionSnippets
+
+## Debug info
+
+To debug set logging to debug level in `RT_Config.pm`:
+```
+vi /opt/rt4/etc/RT_Config.pm
+
+Set($LogToFile, "debug");
+Set($LogDir, '/opt/rt4/var/log');
+Set($LogToFileNamed, "rt.log");    #log to rt.log
+```
+
+Then:
+
+```
+tail -f /opt/rt4/var/log/rt.log
+```
+
+Restart the web server:
+
+```
+sudo service apache2 restart
+```
