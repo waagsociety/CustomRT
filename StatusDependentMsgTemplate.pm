@@ -24,45 +24,46 @@ You can also look up instructions at <somewaagwikiaddress>
   my $group = RT::Group->new($RT::SystemUser);
   my $secondarygroup = undef;
   my $nextstate = '';
+  my $status = $Ticket->Status();
 
-  if ($Ticket->Status() eq "projectAwarded" ){
+  if ($status eq "projectAwarded" ){
     $instructions_message = "Dir. Legal / NB (jij!) vraagt Accountview Code aan bij Finance MW\n";
     $group->LoadUserDefinedGroup('Finance');
     $nextstate = "codeRequested";
 
-  } elsif ($Ticket->Status() eq "codeRequested" ){
+  } elsif ($status eq "codeRequested" ){
     $instructions_message = "Finance MW (jij!) levert Accountview Code aan Dir. Legal / NB\n";
     $group->LoadUserDefinedGroup('Dir_Legal/NB');
     $nextstate = "codeProvided";
 
-  } elsif ($Ticket->Status() eq "codeProvided" ){
+  } elsif ($status eq "codeProvided" ){
     $instructions_message = "Dir. Legal / NB (jij!) maakt Memo en bijbehorende stukken (oa begroting) compleet\n";
     $group->LoadUserDefinedGroup('Finance');
     $nextstate = "memoCompleted";
     $secondarygroup = RT::Group->new($RT::SystemUser);
     $secondarygroup->LoadUserDefinedGroup('SystemAdministrators');
 
-  } elsif ($Ticket->Status() eq "memoCompleted" ){
+  } elsif ($status eq "memoCompleted" ){
     $instructions_message = "Dir. Legal / NB (jij!) geeft Finance opdracht om Achievo en Accountview te regelen\n";
     $group->LoadUserDefinedGroup('Finance');
     $nextstate = "accountReady";
 
-  } elsif ($Ticket->Status() eq "accountReady" ){
+  } elsif ($status eq "accountReady" ){
     $instructions_message = "Finance MW (jij!) leegt Projectkaart ter goedkeuring aan PM voor\n";
     $group->LoadUserDefinedGroup('ProjectManagers');
     $nextstate = "cardSent";
 
-  } elsif ($Ticket->Status() eq "cardSent" ){
+  } elsif ($status eq "cardSent" ){
     $instructions_message = "PM (jij!) slaagt Projectkaart en aanmaak verzoek in pdf op (op BOINK?)\n";
     $group = undef;
     $nextstate = "cardHandled";
 
-  } elsif ($Ticket->Status() eq "noMap" ){
+  } elsif ($status eq "noMap" ){
     $instructions_message = "Dir. Legal / NB (jij!) geeft BOINK beheerder opdracht om projectmap aan te maken\n";
     $group->LoadUserDefinedGroup('ProjectManagers');
     $nextstate = "mapAvailable";
 
-  } elsif ($Ticket->Status() eq "mapAvailable" ){
+  } elsif ($status eq "mapAvailable" ){
     $instructions_message = "PM (jij!) richt projectmap volgens afspraak verder in\n";
     $group = undef;
     $nextstate = "mapReady";
