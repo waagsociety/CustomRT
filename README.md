@@ -13,8 +13,8 @@ A new workflow is defined by:
 6. Set up mail server for the new queue (http://requesttracker.wikia.com/wiki/ManualEmailConfig)
 7. Implement the creation of the secondary workflow:
   1. Load custom condition (/opt/rt4/sbin/rt-setup-database --action insert --datafile ./OnMemoCompleted.pm)
-  2. Create Queue dependent custom template (see file `CreateNoMapTicketTemplate.pm`)
-  3. Create Queue dependent scrip. See for the fields the file `CreateNoMapTicketScrip.pm`
+  2. Create Queue dependent custom template via the Web interface (see file `CreateNoMapTicketTemplate.pm`)
+  3. Create Queue dependent scrip via the Web interface. See for the fields the file `CreateNoMapTicketScrip.pm`
 
 At the moment there are two tickets that changes status based on the different phases of the workflow shown in `Projectkaartwijziging.pdf`. Each phase has a different owner that can operate upon it, and at the moment the person that causes the transition has also the task of assigning the new owner (maybe this can be done automatically).
 
