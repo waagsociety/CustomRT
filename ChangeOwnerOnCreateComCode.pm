@@ -4,28 +4,10 @@ my $group = RT::Group->new($RT::SystemUser);
 my $status = $self->TicketObj->Status();
 
 if ($status eq "projectAwarded" ){
-  $group->LoadUserDefinedGroup('Finance');
-
-} elsif ($status eq "codeRequested" ){
   $group->LoadUserDefinedGroup('Dir_Legal/NB');
 
-} elsif ($status eq "codeProvided" ){
-  $group->LoadUserDefinedGroup('Finance');
-
-} elsif ($status eq "memoCompleted" ){
-  $group->LoadUserDefinedGroup('Finance');
-
-} elsif ($status eq "accountReady" ){
-  $group->LoadUserDefinedGroup('ProjectManagers');
-
-} elsif ($status eq "cardSent" ){
-  $group = undef;
-
 } elsif ($status eq "noMap" ){
-  $group->LoadUserDefinedGroup('ProjectManagers');
-
-} elsif ($status eq "mapAvailable" ){
-  $group = undef;
+  $group->LoadUserDefinedGroup('SystemAdministrators');
 
 } else {
   $group = undef;

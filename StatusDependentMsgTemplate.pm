@@ -5,6 +5,7 @@ Dear {$Ticket->OwnerObj->Name || $Ticket->OwnerObj->RealName},
 The ticket
 
   "{$Ticket->Subject()}"
+  URL: {RT->Config->Get('WebURL')}Ticket/Display.html?id={$Ticket->id}
 
 has been moved to status
 
@@ -19,7 +20,6 @@ You can also look up instructions at <somewaagwikiaddress>
  -------------------------------------------------------------------------
 
  {
-  #This template is specific to the states of the ProjectProposal queue and send messages whose content depends on the ticket status
   my $instructions_message = '';
   my $group = RT::Group->new($RT::SystemUser);
   my $secondarygroup = undef;
@@ -59,7 +59,7 @@ You can also look up instructions at <somewaagwikiaddress>
     $nextstate = "cardHandled";
 
   } elsif ($status eq "noMap" ){
-    $instructions_message = "Dir. Legal / NB (jij!) geeft BOINK beheerder opdracht om projectmap aan te maken\n";
+    $instructions_message = "BOINK beheerder (jij!) krijgt de opdracht om projectmap aan te maken\n";
     $group->LoadUserDefinedGroup('ProjectManagers');
     $nextstate = "mapAvailable";
 

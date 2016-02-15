@@ -8,6 +8,5 @@ Depended-On-By: {$Tickets{'TOP'}->id}
 Refers-To: {$Tickets{'TOP'}->id}
 Queue: {$Tickets{'TOP'}->QueueObj->Name}
 Status: noMap
-Content: This ticket is automatically created when a project card ticket reaches the memoCompleted status. Please assign it to a member of the BOINK administrator group
+Content: This ticket is automatically created when a project card ticket reaches the memoCompleted status. It is also automatically assigned to a member of the BOINK administrator group.
 ENDOFCONTENT
-
