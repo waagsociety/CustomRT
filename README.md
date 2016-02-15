@@ -25,6 +25,8 @@ At the moment there are two tickets that changes status based on the different p
 
 Once a ticket on the main branch of the flow reaches the `memoCompleted` state, a new ticket is automatically created that is depended on by the main ticket. This forces the fact that unless the depended on ticket is resolved (`mapReady` status), the main ticket CAN NOT transition to the final `cardHandled` status.
 
+Email messages are contained in the file `StatusDependentMsgTemplate.pm`, in case they need to be changed the file should be reloaded in RT following the instructions above (and restarting the web server to be sure).
+
 ## Examples for custom implementations
 Parallel workflow implemented with custom fields and child tickets:
 http://requesttracker.wikia.com/wiki/WorkFlow
