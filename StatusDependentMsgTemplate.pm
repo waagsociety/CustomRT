@@ -81,24 +81,27 @@ You can also look up instructions at {RT->Config->Get('WebURL')}Articles/Article
   }
 
   if (defined $group){
-    $instructions_message .= "en owner veranderen naar (een van) de volgende user(s):\n\n";
+    $instructions_message .= "De owner zal automatish veranderen naar de volgende user (naar de eerste in geval van meerdere users):\n\n";
 
     my $users = $group->UserMembersObj();
 
     while ( my $user = $users->Next ) {
       $instructions_message .= $user->Name . "\n";
     }
+
+    $instructions_message .= "Als de owner niet de eerste van de lijst moet zijn, dan aub de juste owner handmatig zetten nadat de status is veranderd.\n";
   }
 
   if ( defined $secondarygroup){
     $instructions_message .= "Er is ook een nieuwe ticket aangemaakt voor de inrichting van de projectmap\n";
-    $instructions_message .= "verander zijn owner aub naar (een van) de volgende user(s):\n\n";
+    $instructions_message .= "De owner is de volgende user (de eerste in geval van meerdere users):\n\n";
 
     my $users = $secondarygroup->UserMembersObj();
 
     while ( my $user = $users->Next ) {
       $instructions_message .= $user->Name . "\n";
     }
+    $instructions_message .= "Als de owner niet de eerste van de lijst moet zijn, dan aub de juste owner handmatig zetten.\n";
   }
   #$group->MemberEmailAddressesAsString();
   $instructions_message;
