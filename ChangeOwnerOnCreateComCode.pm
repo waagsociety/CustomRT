@@ -7,7 +7,7 @@ if ($status eq "projectAwarded" ){
   $group->LoadUserDefinedGroup('Dir_Legal/NB');
 
 } elsif ($status eq "noMap" ){
-  $group->LoadUserDefinedGroup('SystemAdministrators');
+  $group->LoadUserDefinedGroup('ProjectInrichtingBoink');
 
 } else {
   $group = undef;

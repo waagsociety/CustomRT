@@ -41,7 +41,7 @@ You can also look up instructions at {RT->Config->Get('WebURL')}Articles/Article
     $group->LoadUserDefinedGroup('Finance');
     $nextstate = "memoCompleted";
     $secondarygroup = RT::Group->new($RT::SystemUser);
-    $secondarygroup->LoadUserDefinedGroup('SystemAdministrators');
+    $secondarygroup->LoadUserDefinedGroup('ProjectInrichtingBoink');
 
   } elsif ($status eq "memoCompleted" ){
     $instructions_message = "Dir. Legal / NB (jij!) geeft Finance opdracht om Achievo en Accountview te regelen\n";
