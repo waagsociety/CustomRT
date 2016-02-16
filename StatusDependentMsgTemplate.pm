@@ -13,7 +13,7 @@ has been moved to status
 
  Please find below the description of the actions you should perform to move the ticket to its next state.
 
-You can also look up instructions at <somewaagwikiaddress>
+You can also look up instructions at {RT->Config->Get('WebURL')}Articles/Article/Display.html?id=4
 
 -------------------------------------------------------------------------
     Status-dependent Information
