@@ -3,27 +3,27 @@ Customisation for Request Tracker ticketing system
 
 ## Implementing a workflow in RT
 
-A new workflow is defined by:
+This repository contains 2 new workflows with supporting scripts and templates. To implement them in RT, follow these instructions:
 
-1. Modify *RT_SiteConfig.pm* with new workflow (the workflow is implemented as a lifecycle of the tickets). Look at the file `RT_SiteConfig.pm` in the section `Set(%Lifecycles,`
-2. Create a new queue with new lifecycle
-3. Create new groups that represent the actors for the lifecycle’s phases
-4. Assign queue-based rights to the groups, so that only certain groups are authorized to progress the ticket to certain states. Look at the workflow description in `Projectkaartwijziging.pdf` to see what group can make the transition to what state
+1. Modify *RT_SiteConfig.pm* adding the 2 new workflows (the workflow is implemented as a lifecycle of the tickets). Look at the file `RT_SiteConfig.pm` at the sections starting with `Set(%Lifecycles,`
+2. Create 2 new queues with the new lifecycles, respectively `projectStart` and `projectModify`
+3. For each queue, create new groups that represent the actors for that queue's lifecycle phases
+4. For each queue assign queue-based rights to the groups, so that only certain groups are authorized to progress the ticket to certain states. Look at the workflow description in `Projectkaartwijziging_Updated.pdf` to see what group can make the transition to what state in what queue.
 5. Assign real members to the groups. Please note that since RT cannot assign tickets to a group, in the case a group has more members, the scrips will pick one (the first) to automatically assign tickets by creation and state change. Make sure the first user of each group is a person that in case knows how to reassign a ticket.
 6. Set up mail server for the new queue (http://requesttracker.wikia.com/wiki/ManualEmailConfig)
-7. Implement the creation of the secondary workflow:
-  1. Load custom condition (/opt/rt4/sbin/rt-setup-database --action insert --datafile ./OnMemoCompleted.pm)
-  2. Create Queue dependent custom template via the Web interface (see file `CreateNoMapTicketTemplate.pm`)
-  3. Create Queue dependent scrip via the Web interface. See for the fields the file `CreateNoMapTicketScrip.pm`
-8. Create  one more template on the queue: name: `StatusDependentMsgTemplate`, Description: `This template is specific to the states of the ProjectProposal queue and send messages whose content depends on the ticket status`, type: `Perl`, content: paste the content of `StatusDependentMsgTemplate.pm`
-9. Create 3 more scrips on the queue:
+7. For the queue defined with the `projectStart` lifecycle, implement the creation of the secondary workflow:
+  1. Load custom condition (/opt/rt4/sbin/rt-setup-database --action insert --datafile ./OnProjectSetUp.pm)
+  2. Create Queue dependent custom template via the Web interface (see file `CreateFolderRequestTicketTemplate.pm`)
+  3. Create Queue dependent scrip via the Web interface. See for the fields the file `CreateFolderRequestTicketScrip.pm`
+8. For both queues, create  one more template on the queue: name: `StatusDependentMsgTemplate`, Description: `This template is specific to the states of the projectStart and projectModify queues and send messages whose content depends on the ticket status`, type: `Perl`, content: paste the content of `StatusDependentMsgTemplate.pm`
+9. Create 3 more scrips on each queue:
   1. 	Description: `On Owner Change Notify Owner`, Condition: `On Owner Change`, Action: `Notify Owner`, Template: `StatusDependentMsgTemplate`. Disable the standard scrip `On Owner Change Notify Owner` to avoid two outgoing e-mail messages.
   2. 	Description: `On Status Change Change Owner`, Condition: `On Status Change`, Action: `User Defined`, Template: `Blank`. When the action is `User Defined` you need to fill in the `User Defined conditions and results` section. Leave the `Custom Condition` empty, paste in `Custom action preparation code` the content of `ChangeOwnerOnStatusChangePrepCode.pm`, and in `Custom action commit code` the content of `ChangeOwnerOnStatusChangeComCode.pm`
-  3. 	Description: `	On Create Ticket Change Owner`, Condition: `On Create`, Action: `User Defined`, Template: `Blank`. When the action is `User Defined` you need to fill in the `User Defined conditions and results` section. Leave the `Custom Condition` empty, paste in `Custom action preparation code` the content of `ChangeOwnerOnCreatePrepCode.pm`, and in `Custom action commit code` the content of `ChangeOwnerOnCreateComCode.pm`
+  3. 	Description: `On Create Ticket Change Owner`, Condition: `On Create`, Action: `User Defined`, Template: `Blank`. When the action is `User Defined` you need to fill in the `User Defined conditions and results` section. Leave the `Custom Condition` empty, paste in `Custom action preparation code` the content of `ChangeOwnerOnCreatePrepCode.pm`, and in `Custom action commit code` the content of `ChangeOwnerOnCreateComCode.pm`
 
-At the moment there are two tickets that changes status based on the different phases of the workflow shown in `Projectkaartwijziging.pdf`. Each phase has a different owner that can operate upon it, and at each state change or upon ticket creation the scrips assign the ticket to a member of the group authorised for that particular phase.
+Tickets change status based on the different phases of the workflow shown in `Projectkaartwijziging_Updated.pdf`. Each phase has a different owner that can operate upon it, and at each state change or upon ticket creation the scrips assign the ticket to a member of the group authorised for that particular phase.
 
-Once a ticket on the main branch of the flow reaches the `memoCompleted` state, a new ticket is automatically created that is depended on by the main ticket. This forces the fact that unless the depended on ticket is resolved (`mapReady` status), the main ticket CAN NOT transition to the final `cardHandled` status.
+In the `projectStart` queue, once a ticket on the main branch of the flow reaches the `projectSetUp` state, a new ticket is automatically created that is depended on by the main ticket. This forces the fact that unless the depended on ticket is resolved (`folderHandled` status), the main ticket CAN NOT transition to the final `projectHandled` status.
 
 Email messages are contained in the file `StatusDependentMsgTemplate.pm`, in case they need to be changed the file should be reloaded in RT following the instructions above (and restarting the web server to be sure).
 
