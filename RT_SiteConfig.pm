@@ -1,4 +1,4 @@
-# Any configuration directives you include  here will override 
+# Any configuration directives you include  here will override
 # RT's default configuration file, RT_Config.pm
 #
 # To include a directive here, just copy the equivalent statement
@@ -25,74 +25,55 @@ Set(%Lifecycles,
         # queue or modify an existing one
         projectStart => {
             # All the appropriate order statuses
-            initial         => [ 'projectAwarded', 'noMap' ],
-            active          => [ 'codeRequested', 'codeProvided', 'memoCompleted', 'accountReady', 'cardSent', 'mapAvailable' ],
-            inactive        => [ 'cardHandled', 'mapReady', 'suspended', 'deleted' ],
+            initial         => [ 'projectAwarded', 'folderRequest' ],
+            active          => [ 'projectSetUp', 'projectAccept', 'folderSetUp' ],
+            inactive        => [ 'projectHandled', 'folderHandled', 'suspended', 'deleted' ],
             # Default order statuses for certain actions
             defaults => {
                 on_create => 'projectAwarded',
             },
             # Status change restrictions
             transitions => {
-                ''          => [qw(projectAwarded noMap)],
-                projectAwarded     => [qw(codeRequested suspended deleted)],
-                codeRequested  => [qw(codeProvided suspended deleted)],
-                codeProvided    => [qw(memoCompleted suspended deleted)],
-                memoCompleted   => [qw(accountReady suspended deleted)],
-                accountReady    => [qw(cardSent suspended deleted)],
-                cardSent    => [qw(cardHandled suspended deleted)],
-                noMap    => [qw(mapAvailable suspended deleted)],
-                mapAvailable    => [qw(mapReady suspended deleted)],
-                suspended     => [qw(projectAwarded codeRequested codeProvided memoCompleted accountReady cardSent cardHandled mapAvailable mapReady)],
-                deleted     => [qw(projectAwarded codeRequested codeProvided memoCompleted accountReady cardSent cardHandled mapAvailable mapReady)],
+                ''          => [qw(projectAwarded folderRequest)],
+                projectAwarded     => [qw(projectSetUp suspended deleted)],
+                projectSetUp  => [qw(projectAccept suspended deleted)],
+                projectAccept    => [qw(projectHandled suspended deleted)],
+                folderSetUp   => [qw(folderHandled suspended deleted)],
+                suspended     => [qw(projectAwarded projectSetUp projectAccept projectHandled folderRequest folderSetUp folderHandled)],
+                deleted     => [qw(projectAwarded projectSetUp projectAccept projectHandled folderRequest folderSetUp folderHandled))],
             },
             # Rights for different actions
             rights => {
                 # These rights are in the default lifecycle
                 '* -> deleted'  => 'DeleteTicket',
                 '* -> suspended'  => 'SuspendTicket',
-                'projectAwarded -> codeRequested' => 'RequestCode', 
-                'codeRequested -> codeProvided' => 'ProvideCode', 
-                'codeProvided -> memoCompleted' => 'CompleteMemo', 
-                'memoCompleted -> accountReady' => 'CreateAccount', 
-                'accountReady -> cardSent' => 'SendCard', 
-                'cardSent -> cardHandled' => 'BlessCard', 
-                'noMap -> mapAvailable' => 'MakeMap', 
-                'mapAvailable -> mapReady' => 'OrganizeMap', 
+                'projectAwarded -> projectSetUp' => 'RequestCode',
+                'projectSetUp -> projectAccept' => 'AcceptCard',
+                'projectAccept -> projectHandled' => 'SaveMemo',
+                'folderRequest -> folderSetUp' => 'CreateFolder',
+                'folderSetUp -> folderHandled' => 'PrepareFolder',
             },
             # Actions for the web UI
             actions => [
-                'projectAwarded -> codeRequested' => {
-                    label  => 'AccountView Code has been requested',
+                'projectAwarded -> projectSetUp' => {
+                    label  => 'AccountView, Achievo and Memo are ready',
                     update => 'Comment',
                 },
-                'codeRequested -> codeProvided' => {
-                    label  => 'AccountView Code has been provided',
+                'projectSetUp -> projectAccept' => {
+                    label  => 'Project Card is accepted',
                     update => 'Comment',
                 },
-                'codeProvided -> memoCompleted' => {
-                    label  => 'Memo has been completed',
+                'projectAccept -> projectHandled' => {
+                    label  => 'Memo has been saved to BOINK folder',
                     update => 'Comment',
                 },
-                'memoCompleted -> accountReady' => {
-                    label  => 'Account has been created',
+                'folderRequest -> folderSetUp' => {
+                    label  => 'Folder on BOINK has been created',
                     update => 'Comment',
                 },
-                'accountReady -> cardSent' => { 
-                    label  => 'Card has been sent',
+                'folderSetUp -> folderHandled' => {
+                    label  => 'Folder on BOINK has been prepared',
                     update => 'Comment',
-                },
-                'noMap -> mapAvailable' => {
-                    label  => ' Map has been made',
-                    update => 'Comment',
-                },
-                'mapAvailable -> mapReady' => {
-                    label  => 'Map has been organized',
-                    update => 'Comment',
-                },
-                'cardSent -> cardHandled' => {
-                    label  => 'Card has been approved',
-                    update => 'Respond',
                 },
             ],
         },
@@ -100,28 +81,104 @@ Set(%Lifecycles,
         __maps__ => {
             'default -> projectStart' => {
                 'new'      => 'projectAwarded',
-                'open'     => 'codeRequested',
+                'open'     => 'projectSetUp',
                 'stalled'  => 'suspended',
-                'resolved' => 'cardHandled',
+                'resolved' => 'projectHandled',
                 'rejected' => 'suspended',
                 'deleted'  => 'deleted',
             },
             'projectStart -> default' => {
                 'projectAwarded'    => 'new',
-                'noMap'    => 'new',
-                'codeRequested' => 'open',
-                'cardHandled'  => 'resolved',
-                'codeProvided'    => 'open',
-                'memoCompleted'   => 'open',
-                'accountReady'    => 'open',
-                'mapAvailable'    => 'open',
-                'mapReady'    => 'open',
-                'cardSent'    => 'open',
+                'folderRequest'    => 'new',
+                'projectSetUp' => 'open',
+                'projectHandled'  => 'resolved',
+                'projectAccept'    => 'open',
+                'folderSetUp'   => 'open',
+                'folderHandled'    => 'resolved',
                 'suspended'   => 'rejected',
                 'deleted'    => 'deleted',
             },
         },
     );
+
+    Set(%Lifecycles,
+            # 'projectModify' shows up as a lifecycle choice when you create a new
+            # queue or modify an existing one
+            projectModify => {
+                # All the appropriate order statuses
+                initial         => [ 'changeRequest' ],
+                active          => [ 'changeSetUp', 'changeAccept', 'changeLegal' ],
+                inactive        => [ 'changeHandled', 'suspended', 'deleted' ],
+                # Default order statuses for certain actions
+                defaults => {
+                    on_create => 'changeRequest',
+                },
+                # Status change restrictions
+                transitions => {
+                    ''          => [qw(changeRequest)],
+                    changeRequest     => [qw(changeSetUp suspended deleted)],
+                    changeSetUp  => [qw(changeAccept suspended deleted)],
+                    changeAccept    => [qw(changeLegal suspended deleted)],
+                    changeLegal   => [qw(changeHandled suspended deleted)],
+                    suspended     => [qw(changeRequest changeSetUp changeAccept changeLegal changeHandled)],
+                    deleted     => [qw(changeRequest changeSetUp changeAccept changeLegal changeHandled)],
+                },
+                # Rights for different actions
+                rights => {
+                    # These rights are in the default lifecycle
+                    '* -> deleted'  => 'DeleteTicket',
+                    '* -> suspended'  => 'SuspendTicket',
+                    'changeRequest -> changeSetUp' => 'DescribeChange',
+                    'changeSetUp -> changeAccept' => 'AcceptCard',
+                    'changeAccept -> changeLegal' => 'HandleLegal',
+                    'changeLegal -> changeHandled' => 'SaveMemo',
+                },
+                # Actions for the web UI
+                actions => [
+                    'changeRequest -> changeSetUp' => {
+                        label  => 'AccountView Code has been requested',
+                        update => 'Comment',
+                    },
+                    'changeSetUp -> changeAccept' => {
+                        label  => 'AccountView Code has been provided',
+                        update => 'Comment',
+                    },
+                    'changeAccept -> changeLegal' => {
+                        label  => 'Memo has been completed',
+                        update => 'Comment',
+                    },
+                    'changeLegal -> changeHandled' => {
+                        label  => 'Account has been created',
+                        update => 'Comment',
+                    },
+                ],
+            },
+            # Status mapping different different lifecycles
+            __maps__ => {
+                'default -> projectModify' => {
+                    'new'      => 'projectAwarded',
+                    'open'     => 'projectSetUp',
+                    'stalled'  => 'suspended',
+                    'resolved' => 'projectHandled',
+                    'rejected' => 'suspended',
+                    'deleted'  => 'deleted',
+                },
+                'projectModify -> default' => {
+                    'projectAwarded'    => 'new',
+                    'noMap'    => 'new',
+                    'projectSetUp' => 'open',
+                    'projectHandled'  => 'resolved',
+                    'projectAccept'    => 'open',
+                    'folderSetUp'   => 'open',
+                    'accountReady'    => 'open',
+                    'mapAvailable'    => 'open',
+                    'folderHandled'    => 'open',
+                    'cardSent'    => 'open',
+                    'suspended'   => 'rejected',
+                    'deleted'    => 'deleted',
+                },
+            },
+        );
 
 # You must install Plugins on your own, this is only an example
 # of the correct syntax to use when activating them:
