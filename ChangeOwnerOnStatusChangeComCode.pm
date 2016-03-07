@@ -3,22 +3,22 @@ my $group = RT::Group->new($RT::SystemUser);
 
 my $status = $self->TicketObj->Status();
 
-if ($status eq "codeRequested" ){
-  $group->LoadUserDefinedGroup('Finance');
-
-} elsif ($status eq "codeProvided" ){
-  $group->LoadUserDefinedGroup('Dir_Legal/NB');
-
-} elsif ($status eq "memoCompleted" ){
-  $group->LoadUserDefinedGroup('Finance');
-
-} elsif ($status eq "accountReady" ){
-  $group->LoadUserDefinedGroup('Finance');
-
-} elsif ($status eq "cardSent" ){
+if ($status eq "projectSetUp" ){
   $group->LoadUserDefinedGroup('ProjectManagers');
 
-} elsif ($status eq "mapAvailable" ){
+} elsif ($status eq "projectAccept" ){
+  $group->LoadUserDefinedGroup('ProjectManagers');
+
+} elsif ($status eq "folderSetUp" ){
+  $group->LoadUserDefinedGroup('ProjectManagers');
+
+} elsif ($status eq "changeSetUp" ){
+  $group->LoadUserDefinedGroup('ProjectManagers');
+
+} elsif ($status eq "changeAccept" ){
+  $group->LoadUserDefinedGroup('Dir_Legal/NB');
+
+} elsif ($status eq "changeLegal" ){
   $group->LoadUserDefinedGroup('ProjectManagers');
 
 } else {

@@ -6,8 +6,11 @@ my $status = $self->TicketObj->Status();
 if ($status eq "projectAwarded" ){
   $group->LoadUserDefinedGroup('Dir_Legal/NB');
 
-} elsif ($status eq "noMap" ){
+} elsif ($status eq "folderRequest" ){
   $group->LoadUserDefinedGroup('ProjectInrichtingBoink');
+
+} elsif ($status eq "changeRequest" ){
+  $group->LoadUserDefinedGroup('Dir_Legal/NB');
 
 } else {
   $group = undef;

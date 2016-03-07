@@ -3,7 +3,7 @@ use strict;
 my %states;
 
 # Fill up our hash a bit
-foreach ("projectAwarded", "noMap") {
+foreach ("projectAwarded", "folderRequest", "changeRequest") {
   $states{$_} = 1;
 };
 
