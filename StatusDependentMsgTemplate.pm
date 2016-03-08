@@ -59,6 +59,28 @@ You can also look up instructions at {RT->Config->Get('WebURL')}Articles/Article
     $group = undef;
     $nextstate = "folderHandled";
 
+  } elsif ($status eq "changeRequest" ){
+    $instructions_message = "Dir. Legal/NB beschrijft wijziging in Memo en zorgt dat Finance Achievo & Account- view inregelt.\n" .
+    "(Dir. Legal/NB noteert eventueel op de projectkaart dat juridische afhandling nog onafgerond is).\n";
+    $group->LoadUserDefinedGroup('ProjectManagers');
+    $nextstate = "changeSetUp";
+
+  } elsif ($status eq "changeSetUp" ){
+    $instructions_message = "Projectkaart wordt (ovv. afhandling legal) door desbetreffende PM geaccepteerd.\n" .
+    $group->LoadUserDefinedGroup('Dir_Legal/NB');
+    $nextstate = "changeAccept";
+
+  } elsif ($status eq "changeAccept" ){
+    $instructions_message = "Dir. Legal/NB handelt i.s.m. PM eventuele overgebleven juridische verplichtingen / eventuele conditions for request af.\n" .
+    "Eventueel leidt dit tot vernieuwde memo.\n";
+    $group->LoadUserDefinedGroup('ProjectManagers');
+    $nextstate = "changeLegal";
+
+  } elsif ($status eq "changeLegal" ){
+    $instructions_message = "Laatste Memo wordt in pdf opgeslagen in projectmap (op BOINK?) door PM.\n";
+    $group = undef;
+    $nextstate = "changeHandled";
+
   } else {
     $instructions_message = "Error!!";
     $group = undef;
