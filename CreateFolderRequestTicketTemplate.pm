@@ -1,6 +1,6 @@
 Name: CreateFolderRequestTicket
 
-Description: Created dependedOn ticket in folderRequest state
+Description: Create dependedOn ticket in folderRequest state
 
 ===Create-Ticket: createnoMapticket
 Subject: Map creation sub-workflow for {$Tickets{'TOP'}->Subject}
