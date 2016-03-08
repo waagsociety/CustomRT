@@ -5,7 +5,7 @@ Customisation for Request Tracker ticketing system
 
 This repository contains 2 new workflows with supporting scripts and templates. To implement them in RT, follow these instructions:
 
-1. Modify *RT_SiteConfig.pm* in `/opt/rt4/lib/RT/CustomFieldValues/` (change according to your installation) adding the 2 new workflows (the workflow is implemented as a lifecycle of the tickets). Look at the file *RT_SiteConfig.pm* at the sections starting with `Set(%Lifecycles,`
+1. Modify *RT_SiteConfig.pm* in `/opt/rt4/etc/` (change according to your installation) adding the 2 new workflows (the workflow is implemented as a lifecycle of the tickets). Look at the file *RT_SiteConfig.pm* at the sections starting with `Set(%Lifecycles,`
 2. Create 2 new queues with the new lifecycles, respectively `projectStart` and `projectModify`
 3. For each queue, create new groups that represent the actors for that queue's lifecycle phases
 4. For each queue assign queue-based rights to the groups, so that only certain groups are authorized to progress the ticket to certain states. Look at the workflow description in `Projectkaartwijziging_Updated.pdf` to see what group can make the transition to what state in what queue.
