@@ -106,7 +106,7 @@ Set(%Lifecycles,
                 'changeRequest -> changeSetUp' => 'DescribeChange',
                 'changeSetUp -> changeAccept' => 'AcceptCard',
                 'changeAccept -> changeLegal' => 'HandleLegal',
-                'changeLegal -> changeHandled' => 'SaveMemo',
+                'changeLegal -> changeHandled' => 'SaveCorrectedMemo',
             },
             # Actions for the web UI
             actions => [
