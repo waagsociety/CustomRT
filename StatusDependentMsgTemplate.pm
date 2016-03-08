@@ -27,7 +27,13 @@ You can also look up instructions at {RT->Config->Get('WebURL')}Articles/Article
   my $status = $Ticket->Status();
 
   if ($status eq "projectAwarded" ){
-    $instructions_message = "Dir. Legal / NB (jij!) vraagt Accountview Code aan bij Finance MW\n";
+    $instructions_message = "Dir. Legal/NB vraagt Accountview Code aan bij Finance en richt gezamenlijk Achievo en Accountview in.\n" .
+    "Dan draagt hij Memo over bestaande uit:\n" .
+    " -Acc. View Budget screenshot;\n" .
+    " -Achievo screenshot;\n" .
+    " -Beschikking/contract;\n" .
+    " -Voorstel/o erte;\n" .
+    " -Begroting .\n";
     $group->LoadUserDefinedGroup('Finance');
     $nextstate = "codeRequested";
 
@@ -98,7 +104,7 @@ You can also look up instructions at {RT->Config->Get('WebURL')}Articles/Article
     $nextstate = "cardSent";
 
     $instructions_message .= "\nAls dit klaar is, dan aub de tiket naar status \"" . $nextstate . "\" zetten\n";
-    
+
     $instructions_message .= "De owner zal automatish veranderen naar de volgende user (naar de eerste in geval van meerdere users):\n\n";
 
     $users = $group->UserMembersObj();
