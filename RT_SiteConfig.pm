@@ -104,9 +104,9 @@ Set(%Lifecycles,
                 '* -> deleted'  => 'DeleteTicket',
                 '* -> suspended'  => 'SuspendTicket',
                 'changeRequest -> changeSetUp' => 'DescribeChange',
-                'changeSetUp -> changeAccept' => 'AcceptCard',
+                'changeSetUp -> changeAccept' => 'AcceptModifiedCard',
                 'changeAccept -> changeLegal' => 'HandleLegal',
-                'changeLegal -> changeHandled' => 'SaveCorrectedMemo',
+                'changeLegal -> changeHandled' => 'SaveModifiedMemo',
             },
             # Actions for the web UI
             actions => [
