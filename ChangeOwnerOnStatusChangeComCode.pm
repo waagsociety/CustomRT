@@ -3,23 +3,51 @@ my $group = RT::Group->new($RT::SystemUser);
 
 my $status = $self->TicketObj->Status();
 
+my $CFName = 'DesignatedPM';
+
+my $QueueObj = $self->TicketObj->QueueObj;
+my $CFObj = RT::CustomField->new( $QueueObj->CurrentUser );
+$CFObj->LoadByNameAndQueue( Name => $CFName, Queue => $QueueObj->id );
+
+my $pm = $self->TicketObj->FirstCustomFieldValue( $CFObj->id);
+
 if ($status eq "projectSetUp" ){
-  $group->LoadUserDefinedGroup('ProjectManagers');
+  if (defined $pm){
+    $group = undef;
+  }else{
+    $group->LoadUserDefinedGroup('ProjectManagers');
+  }
 
 } elsif ($status eq "projectAccept" ){
-  $group->LoadUserDefinedGroup('ProjectManagers');
+  if (defined $pm){
+    $group = undef;
+  }else{
+    $group->LoadUserDefinedGroup('ProjectManagers');
+  }
 
 } elsif ($status eq "folderSetUp" ){
-  $group->LoadUserDefinedGroup('ProjectManagers');
+  if (defined $pm){
+    $group = undef;
+  }else{
+    $group->LoadUserDefinedGroup('ProjectManagers');
+  }
 
 } elsif ($status eq "changeSetUp" ){
-  $group->LoadUserDefinedGroup('ProjectManagers');
+  if (defined $pm){
+    $group = undef;
+  }else{
+    $group->LoadUserDefinedGroup('ProjectManagers');
+  }
 
 } elsif ($status eq "changeAccept" ){
   $group->LoadUserDefinedGroup('Dir_Legal/NB');
 
 } elsif ($status eq "changeLegal" ){
-  $group->LoadUserDefinedGroup('ProjectManagers');
+  if (defined $pm){
+    $group = undef;
+  }else{
+    $group->LoadUserDefinedGroup('ProjectManagers');
+  }
 
 } else {
   $group = undef;
@@ -35,6 +63,16 @@ if (defined $group){
       $RT::Logger->error("Couldn't change owner: $msg");
       return 0;
     }
+  }
+} elsif (defined $pm){
+  my $user = RT::User->new( $RT::SystemUser );
+
+  $user->Load( $pm );
+
+  my ($status, $msg) = $self->TicketObj->SetOwner($user->id(),"Set");
+  unless ( $status ) {
+    $RT::Logger->error("Couldn't change owner: $msg");
+    return 0;
   }
 }
 return 1;

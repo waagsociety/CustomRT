@@ -175,6 +175,8 @@ Set(%Lifecycles,
             },
         );
 
+Set( @CustomFieldValuesSources, "RT::CustomFieldValues::ProjectManagers" );
+
 # You must install Plugins on your own, this is only an example
 # of the correct syntax to use when activating them:
 #     Plugin( "RT::Extension::SLA" );
