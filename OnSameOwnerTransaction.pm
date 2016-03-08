@@ -3,7 +3,7 @@ use strict;
 my %states;
 
 # Fill up our hash a bit
-foreach ("accountReady") {
+foreach ("projectAccept") {
   $states{$_} = 1;
 };
 
