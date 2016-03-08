@@ -70,3 +70,9 @@ Restart the web server:
 ```
 sudo service apache2 restart
 ```
+
+You can also try to run directly the server without apache:
+
+```
+/opt/rt4/sbin/rt-server.fcgi
+```
