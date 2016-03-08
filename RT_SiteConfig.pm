@@ -77,6 +77,57 @@ Set(%Lifecycles,
                 },
             ],
         },
+        # 'projectModify' shows up as a lifecycle choice when you create a new
+        # queue or modify an existing one
+        projectModify => {
+            # All the appropriate order statuses
+            initial         => [ 'changeRequest' ],
+            active          => [ 'changeSetUp', 'changeAccept', 'changeLegal' ],
+            inactive        => [ 'changeHandled', 'suspended', 'deleted' ],
+            # Default order statuses for certain actions
+            defaults => {
+                on_create => 'changeRequest',
+            },
+            # Status change restrictions
+            transitions => {
+                ''          => [qw(changeRequest)],
+                changeRequest     => [qw(changeSetUp suspended deleted)],
+                changeSetUp  => [qw(changeAccept suspended deleted)],
+                changeAccept    => [qw(changeLegal suspended deleted)],
+                changeLegal   => [qw(changeHandled suspended deleted)],
+                suspended     => [qw(changeRequest changeSetUp changeAccept changeLegal changeHandled)],
+                deleted     => [qw(changeRequest changeSetUp changeAccept changeLegal changeHandled)],
+            },
+            # Rights for different actions
+            rights => {
+                # These rights are in the default lifecycle
+                '* -> deleted'  => 'DeleteTicket',
+                '* -> suspended'  => 'SuspendTicket',
+                'changeRequest -> changeSetUp' => 'DescribeChange',
+                'changeSetUp -> changeAccept' => 'AcceptCard',
+                'changeAccept -> changeLegal' => 'HandleLegal',
+                'changeLegal -> changeHandled' => 'SaveMemo',
+            },
+            # Actions for the web UI
+            actions => [
+                'changeRequest -> changeSetUp' => {
+                    label  => 'Change has been described in Memo',
+                    update => 'Comment',
+                },
+                'changeSetUp -> changeAccept' => {
+                    label  => 'Project card has been accepted',
+                    update => 'Comment',
+                },
+                'changeAccept -> changeLegal' => {
+                    label  => 'Legal issues have been handled',
+                    update => 'Comment',
+                },
+                'changeLegal -> changeHandled' => {
+                    label  => 'Memo has been saved in BOINK',
+                    update => 'Comment',
+                },
+            ],
+        },
         # Status mapping different different lifecycles
         __maps__ => {
             'default -> projectStart' => {
@@ -98,82 +149,26 @@ Set(%Lifecycles,
                 'suspended'   => 'rejected',
                 'deleted'    => 'deleted',
             },
+            'default -> projectModify' => {
+                'new'      => 'changeRequest',
+                'open'     => 'changeSetUp',
+                'stalled'  => 'suspended',
+                'resolved' => 'changeHandled',
+                'rejected' => 'suspended',
+                'deleted'  => 'deleted',
+            },
+            'projectModify -> default' => {
+                'changeRequest'    => 'new',
+                'changeSetUp' => 'open',
+                'changeHandled'  => 'resolved',
+                'changeAccept'    => 'open',
+                'changeLegal'   => 'open',
+                'suspended'   => 'rejected',
+                'deleted'    => 'deleted',
+            },
         },
     );
 
-    Set(%Lifecycles,
-            # 'projectModify' shows up as a lifecycle choice when you create a new
-            # queue or modify an existing one
-            projectModify => {
-                # All the appropriate order statuses
-                initial         => [ 'changeRequest' ],
-                active          => [ 'changeSetUp', 'changeAccept', 'changeLegal' ],
-                inactive        => [ 'changeHandled', 'suspended', 'deleted' ],
-                # Default order statuses for certain actions
-                defaults => {
-                    on_create => 'changeRequest',
-                },
-                # Status change restrictions
-                transitions => {
-                    ''          => [qw(changeRequest)],
-                    changeRequest     => [qw(changeSetUp suspended deleted)],
-                    changeSetUp  => [qw(changeAccept suspended deleted)],
-                    changeAccept    => [qw(changeLegal suspended deleted)],
-                    changeLegal   => [qw(changeHandled suspended deleted)],
-                    suspended     => [qw(changeRequest changeSetUp changeAccept changeLegal changeHandled)],
-                    deleted     => [qw(changeRequest changeSetUp changeAccept changeLegal changeHandled)],
-                },
-                # Rights for different actions
-                rights => {
-                    # These rights are in the default lifecycle
-                    '* -> deleted'  => 'DeleteTicket',
-                    '* -> suspended'  => 'SuspendTicket',
-                    'changeRequest -> changeSetUp' => 'DescribeChange',
-                    'changeSetUp -> changeAccept' => 'AcceptCard',
-                    'changeAccept -> changeLegal' => 'HandleLegal',
-                    'changeLegal -> changeHandled' => 'SaveMemo',
-                },
-                # Actions for the web UI
-                actions => [
-                    'changeRequest -> changeSetUp' => {
-                        label  => 'Change has been described in Memo',
-                        update => 'Comment',
-                    },
-                    'changeSetUp -> changeAccept' => {
-                        label  => 'Project card has been accepted',
-                        update => 'Comment',
-                    },
-                    'changeAccept -> changeLegal' => {
-                        label  => 'Legal issues have been handled',
-                        update => 'Comment',
-                    },
-                    'changeLegal -> changeHandled' => {
-                        label  => 'Memo has been saved in BOINK',
-                        update => 'Comment',
-                    },
-                ],
-            },
-            # Status mapping different different lifecycles
-            __maps__ => {
-                'default -> projectModify' => {
-                    'new'      => 'changeRequest',
-                    'open'     => 'changeSetUp',
-                    'stalled'  => 'suspended',
-                    'resolved' => 'changeHandled',
-                    'rejected' => 'suspended',
-                    'deleted'  => 'deleted',
-                },
-                'projectModify -> default' => {
-                    'changeRequest'    => 'new',
-                    'changeSetUp' => 'open',
-                    'changeHandled'  => 'resolved',
-                    'changeAccept'    => 'open',
-                    'changeLegal'   => 'open',
-                    'suspended'   => 'rejected',
-                    'deleted'    => 'deleted',
-                },
-            },
-        );
 
 Set( @CustomFieldValuesSources, "RT::CustomFieldValues::ProjectManagers" );
 
