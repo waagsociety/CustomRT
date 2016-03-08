@@ -23,9 +23,8 @@ This repository contains 2 new workflows with supporting scripts and templates. 
   4. 	Description: `On Same Owner Transaction Notify Owner`, Condition: `User Defined`, Action: `Notify Owner`, Template: `StatusDependentMsgTemplate`. When the condition is `User Defined` you need to fill in the `User Defined conditions and results` section. Paste in `Custom Condition` the content of *OnSameOwnerTransaction.pm*, leave `Custom action preparation code` and `Custom action commit code` empty.
 10. Create the Custom Field to assign a PM to each ticket:
   1. Copy the file *ProjectManagers.pm* to the directory `/opt/rt4/lib/RT/CustomFieldValues/` (change according to your installation). Notice that in the file *RT_SiteConfig.pm* there is already a reference to the class defined in this scrip
-  2. For each queue, define a Custom Field" `Admin->Custom Fields->Create`. Name: `DesignatedPM`, Description: `The PM that is assigned to a project proposal or project change`, Type: `Select one value`, Render Type: `Dropdown`, Field values source: `List Project Managers members` (if you do not see this field you have to restart apache), Applies to: `Tickets`, and make sure that it is enabled. Navigate to the `Applies to` tab and select both queues to apply it to.
-  3. Make sure that the different groups have permission to `Modify custom field values` in `Group Rights`, `Rights for Staff` tab.
-
+  2. Define a Custom Field" `Admin->Custom Fields->Create`. Name: `DesignatedPM`, Description: `The PM that is assigned to a project proposal or project change`, Type: `Select one value`, save and continue editing with Render Type: `Dropdown`, Field values source: `List Project Managers members` (if you do not see this field you have to restart apache), Applies to: `Tickets`, and make sure that it is enabled. Navigate to the `Applies to` tab and select both queues to apply it to.
+  3. Make sure that the different groups have permission to `Modify custom field values` in `Group Rights`, `Rights for Staff` tab in each queue.
 
 When creating a ticket, the creator or any other person modifying the ticket status can change the designated PM. When a designated PM is defined, they will be assigned to the ticket instead of the first member of the project manager group (this can be the same person, in any case the designated PM takes precedence).
 
