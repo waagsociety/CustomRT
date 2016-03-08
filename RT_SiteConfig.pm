@@ -40,7 +40,7 @@ Set(%Lifecycles,
                 projectAccept    => [qw(projectHandled suspended deleted)],
                 folderSetUp   => [qw(folderHandled suspended deleted)],
                 suspended     => [qw(projectAwarded projectSetUp projectAccept projectHandled folderRequest folderSetUp folderHandled)],
-                deleted     => [qw(projectAwarded projectSetUp projectAccept projectHandled folderRequest folderSetUp folderHandled))],
+                deleted     => [qw(projectAwarded projectSetUp projectAccept projectHandled folderRequest folderSetUp folderHandled)],
             },
             # Rights for different actions
             rights => {
